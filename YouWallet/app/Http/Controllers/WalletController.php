@@ -3,17 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Wallet;
-use App\Http\Requests\StoreWalletRequest;
-use App\Http\Requests\UpdateWalletRequest;
+use App\Models\User;
+// use App\Http\Requests\StoreWalletRequest;
+// use App\Http\Requests\UpdateWalletRequest;
+use Illuminate\Http\Request;
+
 
 class WalletController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function sendMoney()
     {
-        //
+        // $UserAccount = User::find(session(['email']));
+        
+        // $UserAccount = User::where('email', session(['email']));
+
+        return response()->json([
+            'message'=> session('email'),
+        ]);
+        // $validateData = $request->validate([
+        //     'montant' => 'required'
+        // ]);
     }
 
     /**

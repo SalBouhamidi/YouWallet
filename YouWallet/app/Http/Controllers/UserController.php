@@ -2,29 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Compte;
 
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-
-
-
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-
+   
     public function register(Request $request){
             $request->validate([
                 'name' => 'required', 'max:50',
@@ -39,15 +25,8 @@ class UserController extends Controller
             $user->role_id = 1;
             $user->save();
 
-            session([
-                'user_id' => $user->id,
-                'role_id' =>$user->role_id,
-                'name' =>$user->name,
-
-            ]);
-
             $accountUser = new Compte;
-            $accountUser->Solde = 0;
+            $accountUser->Solde = 100;
             $accountUser->user_id= $user->id;
             $accountUser->save();
 
@@ -72,35 +51,34 @@ class UserController extends Controller
 
 
     public function logIn(Request $request){
-        $validatedata = $request->validate([
-            'email' => 'required',
-            'password' =>'required'
-        ]);
+        $user = User::where('email', $request->email)->first();
         try{
 
-        $Userdata = [
-            'email' => $validatedata['email'],
-            'password' => $validatedata['password']
-        ];
-        // $user = User::where('email', $request->email)->first();
-        // if($user !== hash::check($request->password, $user->password)){
-        //     return response()->json([
-        //         'message' => ' password is incorrect',
-        //         'success' => false
-        //     ],401);
-        // }
-
-        if(Auth::attempt($Userdata)){
-            session([
-                'user_id' => $user->id,
-                'role_id' =>$user->role_id,
-                'name' =>$user->name,
+            $validatedata = $request->validate([
+                'email' => 'required',
+                'password' =>'required',
 
             ]);
+
+            $token = $user->createToken("API TOKEN")->plainTextToken;
+
+        // return response()->json([
+        //     'user' => $token
+        // ]);
+
+        // if(Auth::attempt($validatedata)){
+        //     return response()->json([
+        //         "user" => $token,
+
+        //     ]);
+        // }
+        
+        if(Auth::attempt($validatedata)){
             return response()->json([
                 'message' => 'Welcome to your profil',
                 'success' => true,
-                'data' => $validatedata,
+                'data' => $user,
+                    'token' => $token
             ],200);
 
 
@@ -113,14 +91,15 @@ class UserController extends Controller
         }catch(\Exception $e){
             return response()->json([
                 'message' => 'somthing wrong' .$e->getMessage(),
+                'data' => $user,
                 'success' => false
             ],500);
         }
     }
+       
 
 
-
-
+        
 
 
     
