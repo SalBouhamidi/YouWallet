@@ -26,7 +26,6 @@ class WalletController extends Controller
             $validateData= $request->validate([
                 'montant' => 'required',
                 'motif' => 'required',
-                // 'sendoperation' => 'required',
                 'receiver_id' => 'required',
             ]);
 
@@ -51,16 +50,11 @@ class WalletController extends Controller
                     $Moneysend->sender_id =$user->id;
                     $Moneysend->save();
                   
-
-
                     $senderaccount= compte::where('user_id', $user->id)->first();                   
                      $Soldeupdated = $senderaccount->solde - $Moneysend->montant;
                     $senderaccount->solde = $Soldeupdated;
                     $senderaccount->save();
 
-                    // return response()->json([
-                    //     'message' => 'done wallet and account updated'
-                    // ]);
 
                     $recieveraccount = Compte::where('user_id', $Moneysend->receiver_id)->first();
                     $receiversoldeupdate = $recieveraccount->solde + $Moneysend->montant;
@@ -69,39 +63,32 @@ class WalletController extends Controller
 
                     return response()->json([
                         'message'=> 'your transaction was made successfully',
-                    ]);
-
-
-
-
-                  
-
-                    
-
-
-                    
+                    ]);                    
                 }
                 
             }
             
-
-            // return response()->json([
-            //     'message'=> 'welcome',
-            //     'data' => $validateData['montant'],
-            // ]);
         }
-        
-        // $validateData = $request->validate([
-        //     'montant' => 'required'
-        // ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function Myhistory()
     {
-        //
+        $user= Auth::user();
+        $sendingtransaction = Wallet::where('sender_id', $user->id)->get();
+        $receivingmoney = wallet::where('receiver_id', $user->id)->get();
+
+
+        return response()->json([
+            'message' => 'Dear User, You have send money to the following accounts:',
+            'data' =>  $sendingtransaction,
+            'messageRecieve' =>'Dear User, you recieve money from those accounts:',
+            'dataReceiver' =>  $receivingmoney,
+
+        ]);
+        
     }
 
     /**
