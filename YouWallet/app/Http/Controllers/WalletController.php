@@ -91,6 +91,14 @@ class WalletController extends Controller
         
     }
 
+    public function allTransaction(){
+        $wallets = wallet::get();
+        return response()->json([
+            'message' => 'here\'s all the transactions',
+            'data' => $wallets,
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

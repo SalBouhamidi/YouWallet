@@ -13,6 +13,6 @@ Route::post('register', [UserController::class,'register']);
 Route::post('login', [UserController::class,'login']);
 
 
-Route::get('transactions', [WalletController::class, 'sendMoney'])->middleware('auth:sanctum');
+Route::post('transactions', [WalletController::class, 'sendMoney'])->middleware('auth:sanctum');
 Route::get('myhistory',[WalletController::class, 'Myhistory'])->middleware('auth:sanctum');
-// Route::get('test',[UserController::class,'test']);
+Route::get('dashboard/admin',[WalletController::class,'allTransaction'])->middleware('auth:sanctum');
