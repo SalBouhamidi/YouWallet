@@ -78,7 +78,8 @@ class UserController extends Controller
                 'message' => 'Welcome to your profil',
                 'success' => true,
                 'data' => $user,
-                    'token' => $token
+                'token' => $token,
+                'token_type' => 'Bearer'
             ],200);
 
 

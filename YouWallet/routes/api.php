@@ -7,9 +7,11 @@ use App\Http\Controllers\WalletController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:sanctum');
+});
 
 Route::post('register', [UserController::class,'register']);
 Route::post('login', [UserController::class,'login']);
-Route::get('transactions', [WalletController::class, 'sendMoney']);
+
+
+Route::get('transactions', [WalletController::class, 'sendMoney'])->middleware('auth:sanctum');
 // Route::get('test',[UserController::class,'test']);
