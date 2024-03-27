@@ -1,0 +1,140 @@
+---
+openapi: 3.0.0
+info:
+  title: Youwallet-api
+  description: Youwallet is a project that aims to allow to users to send and recieve money
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/BOUHAMIDISAL/youwallet/1.0.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /register:
+    post:
+      tags:
+      - Register
+      description: Allow user to create an account for the first time
+      operationId: post
+      parameters:
+      - name: name
+        in: query
+        description: name of the user
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: text
+      - name: email
+        in: query
+        description: User has to register using his email
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: email
+      - name: Password
+        in: query
+        description: required password
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: password
+      responses:
+        "200":
+          description: you have registered successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: uri
+                  example: http://10.0.0.225:8080
+        "404":
+          description: error happend
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+  /login:
+    post:
+      tags:
+      - Login
+      description: allow the user to login
+      parameters:
+      - name: email
+        in: query
+        description: User has to login using his email
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: email
+      - name: Password
+        in: query
+        description: required password
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: password
+      responses:
+        "200":
+          description: Welcome to your profil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: uri
+                  example: http://10.0.0.225:8080
+        "401":
+          description: Email or password are incorrect
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "404":
+          description: You don't have account please Register
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404_1'
+        "500":
+          description: Handling exceptions and bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500'
+components:
+  schemas:
+    inline_response_404:
+      type: object
+      properties:
+        error:
+          type: string
+          example: error happend
+    inline_response_401:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Email or password are incorrect
+    inline_response_404_1:
+      type: object
+      properties:
+        error:
+          type: string
+          example: You don't have account please Register
+    inline_response_500:
+      type: object
+      properties:
+        error:
+          type: string
+          example: somthing went wrong
