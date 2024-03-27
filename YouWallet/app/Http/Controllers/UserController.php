@@ -7,9 +7,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Compte;
+use OpenApi\Annotations as OA;
 
 class UserController extends Controller
 {
+        /**
+ * @SWG\Get(
+ *     path="/register",
+ *     summary="create an account",
+ *     tags={"Compte"},
+ *     @SWG\Response(response=200, description="you have register successfully"),
+ *     @SWG\Response(response=400, description="error happend")
+ * )
+ */
    
     public function register(Request $request){
             $request->validate([
@@ -48,6 +58,17 @@ class UserController extends Controller
             }
 
     }
+
+
+        /**
+ * @SWG\Get(
+ *     path="/login",
+ *     summary="log in to my account",
+ *     tags={"User"},
+ *     @SWG\Response(response=200, description="Welcome to your profil"),
+ *     @SWG\Response(response=500, description="somthing went wrong")
+ * )
+ */
 
 
     public function logIn(Request $request){
@@ -91,7 +112,7 @@ class UserController extends Controller
         }
         }catch(\Exception $e){
             return response()->json([
-                'message' => 'somthing wrong' .$e->getMessage(),
+                'message' => 'somthing went wrong' .$e->getMessage(),
                 'data' => $user,
                 'success' => false
             ],500);
@@ -110,48 +131,5 @@ class UserController extends Controller
 
 
 
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

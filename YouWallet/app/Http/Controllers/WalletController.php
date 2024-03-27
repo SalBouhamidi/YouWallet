@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Wallet;
 use App\Models\User;
 use App\Models\Compte;
+use OpenApi\Annotations as OA;
 
 
 
@@ -16,6 +17,34 @@ class WalletController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
+     /**
+ * @OA\Tag(
+ *     name="account",
+ *     description="update account solde once the client send money"
+ * )
+ * @OA\Info(
+ *     version="1.0",
+ *     title="send Money",
+ *     description="we use this function to send money from a user to another user",
+ *     @OA\Contact(name="Swagger API Team")
+ * )
+ * @OA\Server(
+ *     url="http://127.0.0.1:8000",
+ *     description="API server"
+ * )
+ */
+
+     /**
+ * @SWG\Get(
+ *     path="/transactions",
+ *     summary="send money from an account to another account",
+ *     tags={"Compte"},
+ *     @SWG\Response(response=200, description="your transaction was made successfully"),
+ *     @SWG\Response(response=400, description="Invalid request")
+ * )
+ */
     public function sendMoney(Request $request)
     {
         // $UserAccount = User::find(session(['email']));
@@ -33,13 +62,13 @@ class WalletController extends Controller
                 return response()->json([
                     'message'=> 'welcome to youWallet',
                     'data' => 'you don\'t have enough money to send it',
-                ]);
+                ],400);
             }else{
                 $recievercheck= User::where('id', $validateData['receiver_id'])->first();
                 if($recievercheck == null){
                     return response()->json([
                         'message'=> 'the account number of user is not valid, we would advise you to check again',
-                    ]);
+                    ],400);
 
                 }else{
                     $Moneysend = new Wallet;
@@ -63,7 +92,7 @@ class WalletController extends Controller
 
                     return response()->json([
                         'message'=> 'your transaction was made successfully',
-                    ]);                    
+                    ],200);                    
                 }
                 
             }
@@ -71,9 +100,16 @@ class WalletController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
+    
+     /**
+ * @SWG\Get(
+ *     path="/myhistory",
+ *     summary="show history of User's transactions",
+ *     tags={"wallet"},
+ *     @SWG\Response(response=200, description="Dear User, You have send money to the following accounts"),
+ * )
+ */
     public function Myhistory()
     {
         $user= Auth::user();
@@ -91,6 +127,17 @@ class WalletController extends Controller
         
     }
 
+        /**
+ * @SWG\Get(
+ *     path="/dashboard/admin",
+ *     summary="show all transactions",
+ *     tags={"wallet"},
+ *     @SWG\Response(response=200, description="here\'s all the transactions"),
+ *  *     @SWG\Response(response=400, description="Unauthorized"),
+
+ * )
+ */
+
     public function allTransaction(){
         $wallets = wallet::get();
         return response()->json([
@@ -99,43 +146,6 @@ class WalletController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreWalletRequest $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Wallet $wallet)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Wallet $wallet)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateWalletRequest $request, Wallet $wallet)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Wallet $wallet)
-    {
-        //
-    }
 }
