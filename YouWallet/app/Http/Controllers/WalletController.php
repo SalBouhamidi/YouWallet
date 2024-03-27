@@ -19,32 +19,8 @@ class WalletController extends Controller
      */
 
 
-     /**
- * @OA\Tag(
- *     name="account",
- *     description="update account solde once the client send money"
- * )
- * @OA\Info(
- *     version="1.0",
- *     title="send Money",
- *     description="we use this function to send money from a user to another user",
- *     @OA\Contact(name="Swagger API Team")
- * )
- * @OA\Server(
- *     url="http://127.0.0.1:8000",
- *     description="API server"
- * )
- */
 
-     /**
- * @SWG\Get(
- *     path="/transactions",
- *     summary="send money from an account to another account",
- *     tags={"Compte"},
- *     @SWG\Response(response=200, description="your transaction was made successfully"),
- *     @SWG\Response(response=400, description="Invalid request")
- * )
- */
+
     public function sendMoney(Request $request)
     {
         // $UserAccount = User::find(session(['email']));
@@ -102,14 +78,7 @@ class WalletController extends Controller
 
 
     
-     /**
- * @SWG\Get(
- *     path="/myhistory",
- *     summary="show history of User's transactions",
- *     tags={"wallet"},
- *     @SWG\Response(response=200, description="Dear User, You have send money to the following accounts"),
- * )
- */
+
     public function Myhistory()
     {
         $user= Auth::user();
@@ -127,23 +96,14 @@ class WalletController extends Controller
         
     }
 
-        /**
- * @SWG\Get(
- *     path="/dashboard/admin",
- *     summary="show all transactions",
- *     tags={"wallet"},
- *     @SWG\Response(response=200, description="here\'s all the transactions"),
- *  *     @SWG\Response(response=400, description="Unauthorized"),
-
- * )
- */
+  
 
     public function allTransaction(){
         $wallets = wallet::get();
         return response()->json([
             'message' => 'here\'s all the transactions',
             'data' => $wallets,
-        ]);
+        ],200);
     }
 
 

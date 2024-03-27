@@ -11,13 +11,52 @@ use OpenApi\Annotations as OA;
 
 class UserController extends Controller
 {
-        /**
- * @SWG\Get(
- *     path="/register",
- *     summary="create an account",
- *     tags={"Compte"},
- *     @SWG\Response(response=200, description="you have register successfully"),
- *     @SWG\Response(response=400, description="error happend")
+
+
+
+
+/**
+  * @OA\Tag(
+ *     name="authentification",
+ *     description="login and register"
+ * )
+ * @OA\Info(
+ *     version="1.0",
+ *     title="login or sign uo",
+ *     description="the user can create an account and login from it",
+ *     @OA\Contact(name="Swagger API Team")
+ * )
+ * @OA\Server(
+ *     url="http://127.0.0.1:8000",
+ *     description="API server"
+ * )
+ * 
+ * 
+ * 
+ * @OA\Post(
+ * path="/register",
+ * summary="Register the account of the client",
+ * description="Sign up by email, password, name",
+ * operationId="auth",
+ * tags={"User"},
+ * @OA\RequestBody(
+ *    required=true,
+ *    description="Pass user credentials",
+ *    @OA\JsonContent(
+ *       required={"email","password", "name"},
+ *       @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
+ *       @OA\Property(property="password", type="string", format="password", example="qhsdhgqhgqsbvdhsvq"),
+ *       @OA\Property(property="name", type="string", format="text", example="salima"),
+ *    ),
+ * ),
+ * @OA\Response(
+ *    response=422,
+ *    description="error happend",
+ *    @OA\JsonContent(
+ *       @OA\Property(property="message", type="string", example="error happend")
+ *     )
+ * 
+ *     )
  * )
  */
    
@@ -54,25 +93,25 @@ class UserController extends Controller
                     [
                         'success' => false,
                         'message'=> 'error happend'.$e->getMessage(),
-                    ],400);
+                    ],404);
             }
 
     }
 
 
-        /**
- * @SWG\Get(
- *     path="/login",
- *     summary="log in to my account",
- *     tags={"User"},
- *     @SWG\Response(response=200, description="Welcome to your profil"),
- *     @SWG\Response(response=500, description="somthing went wrong")
- * )
- */
+
+
 
 
     public function logIn(Request $request){
         $user = User::where('email', $request->email)->first();
+
+        if($user == null){
+            return response()->json([
+                'message'=> 'You don\'t have account please Register'
+            ],404);
+
+        }
         try{
 
             $validatedata = $request->validate([
@@ -82,17 +121,6 @@ class UserController extends Controller
             ]);
 
             $token = $user->createToken("API TOKEN")->plainTextToken;
-
-        // return response()->json([
-        //     'user' => $token
-        // ]);
-
-        // if(Auth::attempt($validatedata)){
-        //     return response()->json([
-        //         "user" => $token,
-
-        //     ]);
-        // }
         
         if(Auth::attempt($validatedata)){
             return response()->json([
