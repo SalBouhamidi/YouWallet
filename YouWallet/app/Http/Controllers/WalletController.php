@@ -9,6 +9,8 @@ use App\Models\Wallet;
 use App\Models\User;
 use App\Models\Compte;
 use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\DB;
+
 
 
 
@@ -56,7 +58,7 @@ class WalletController extends Controller
                     $Moneysend->save();
                   
                     $senderaccount= compte::where('user_id', $user->id)->first();                   
-                     $Soldeupdated = $senderaccount->solde - $Moneysend->montant;
+                    $Soldeupdated = $senderaccount->solde - $Moneysend->montant;
                     $senderaccount->solde = $Soldeupdated;
                     $senderaccount->save();
 
@@ -66,9 +68,16 @@ class WalletController extends Controller
                     $recieveraccount->solde = $receiversoldeupdate;
                     $recieveraccount->save();
 
+                    $recievername = User ::where('id',$Moneysend->receiver_id )->first();
+
                     return response()->json([
                         'message'=> 'your transaction was made successfully',
-                    ],200);                    
+                        'user Sole'=> $senderaccount->solde,
+                        'Reciever name' => $recievername->name,
+                        'reciever email' => $recievername->email,
+                        'Amount that you send' => $Moneysend->montant
+                    ],200);     
+                    //asynchronos , promises, filter, map , reduce, objects, array key value,               
                 }
                 
             }
@@ -92,11 +101,11 @@ class WalletController extends Controller
             'messageRecieve' =>'Dear User, you recieve money from those accounts:',
             'dataReceiver' =>  $receivingmoney,
 
-        ]);
+        ],200);
         
     }
 
-  
+
 
     public function allTransaction(){
         $wallets = wallet::get();
