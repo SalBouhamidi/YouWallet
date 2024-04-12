@@ -14,3 +14,9 @@ code {
 .nav{
   background-color:pink !important;
 }
+.btn-submit{
+  background-color:rgb(250, 162, 177,1);
+}
+.btn-submit:hover{
+  background-color:pink
+}

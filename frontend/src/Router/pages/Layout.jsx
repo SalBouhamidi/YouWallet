@@ -1,11 +1,11 @@
-import {Link} from "react-router-dom"
+import {Link, Outlet} from "react-router-dom"
 export default function Layout(){
     return (
         <>
         <nav>
         <ul className="nav justify-content-between h-25 px-5 py-3">
             <li className="nav-item">
-                <Link to="/" className="text-light text-decoration-none fw-bold">Home</Link>
+                <Link to="/home" className="text-light text-decoration-none fw-bold">Home</Link>
             </li>
             <li className="nav-item">
                 <Link to="/Transaction" className="text-light text-decoration-none fw-bold">Made a transaction</Link>
@@ -21,6 +21,9 @@ export default function Layout(){
             </li>
         </ul>
         </nav>
+        <div className="container-fluid w-75 mx-auto">
+            <Outlet/>
+        </div>
         </>
     )
 }
