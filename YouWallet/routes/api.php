@@ -16,3 +16,4 @@ Route::post('login', [UserController::class,'login']);
 Route::post('transactions', [WalletController::class, 'sendMoney'])->middleware('auth:sanctum');
 Route::get('myhistory',[WalletController::class, 'Myhistory'])->middleware('auth:sanctum');
 Route::get('dashboard/admin',[WalletController::class,'allTransaction'])->middleware('auth:sanctum');
+ 
