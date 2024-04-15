@@ -117,7 +117,6 @@ class UserController extends Controller
             $validatedata = $request->validate([
                 'email' => 'required',
                 'password' =>'required',
-
             ]);
 
             $token = $user->createToken("API TOKEN")->plainTextToken;
