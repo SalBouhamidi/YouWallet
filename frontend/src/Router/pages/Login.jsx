@@ -34,10 +34,10 @@ export function Login(){
                     password:password
                 }
             )
-            console.log({
-                email:email,
-                password:password
-            })
+            const token = response.data.token
+            localStorage.setItem('token', token);
+            // console.log(localStorage.getItem('token'))
+
             if(response.status === 200){
                 console.log('welcome to your account')
                 setEmail("")

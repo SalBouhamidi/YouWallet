@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link} from "react-router-dom"
 import { AxiosConsumed } from "../../api/AxiosConsumed"
+
 
 
 export default function Transations(){
@@ -26,6 +27,8 @@ export default function Transations(){
     }
     const handleSubmit = async(e) => {
          e.preventDefault()
+
+
          const data = {
             montant:montant,
             motif:motif,
@@ -33,21 +36,39 @@ export default function Transations(){
         }
         console.log(data)
          try{
-            const response = await AxiosConsumed.post(
-                "/transactions",
-                {
-                    montant:montant,
-                    motif:motif,
-                    receiver_id:receiver_id
+            const token= localStorage.getItem('token');
+            if(!token){
+                Navigate('/login')    
+                
+            }else{
+                console.log(token)
+                const response = await AxiosConsumed.post(
+                    "/transactions",
+                    {
+                        montant:montant,
+                        motif:motif,
+                        receiver_id:receiver_id
+                    },
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }
+    
+                )
+                if(response.status === 200){
+                       console.log('your transsactions was made successfully')
+                       setMontant("")
+                       setMotif('')
+                       setReceiver_id('')
+                       Navigate("/Transaction");
+
+                }else{
+                    console.log('try again please')
                 }
 
-            )
-            if(response.status === 200){
-                   console.log('your transsactions was made successfully') 
-                   Navigate('/transactions')
-            }else{
-                console.log('try again please')
             }
+
 
          }catch(error){
             console.error("Error". error)
@@ -58,7 +79,17 @@ export default function Transations(){
     return (
         <>
  <h3 className="mt-5">Welcome to YouWallet Transaction</h3>
-        <p>Sending Money</p>
+    <h4>Your Balance</h4>
+
+    <div className="card mb-5" >
+        <div className="card-body">
+            <h5 className="card-title text-light">Your balance info:</h5>
+            <h6 className="card-subtitle mb-2 text-body-secondary">Dear User:</h6>
+            <p className="card-text text-light">Your sold is: </p>
+            <Link to="/history" class="card-link text-body-secondary">See history of user Transaction</Link>
+        </div>
+    </div>
+        <p className="fw-bold">Sending Money</p>
         <form>
                 <div className="mb-3">
                     <label  className="form-label">Montant</label>
